@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# 🔒 Sensitive credentials and keys
+credential.json
+config/credential.json
+*.key
+*.pem
+*.crt
+
 # Distribution / packaging
 .Python
 build/
