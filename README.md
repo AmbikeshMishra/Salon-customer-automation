@@ -48,6 +48,38 @@ This project is a lightweight, real-world automation system designed for barber 
 │── README.md
 ```
 
+⚙️ Setup Instructions
+1. Clone the repository
+git clone https://github.com/<your-username>/barber_app.git
+cd barber_app
+
+
+2. Create and activate a virtual environment
+- Windows (cmd):
+python -m venv venv
+venv\Scripts\activate
+- Linux/macOS:
+python3 -m venv venv
+source venv/bin/activate
+
+
+3. Install dependencies
+pip install -r requirements.txt
+
+
+4. Configure credentials (if using Google Sheets)
+- Place your credential.json in the config/ folder (this folder is ignored by .gitignore).
+- Set environment variable:
+export GOOGLE_APPLICATION_CREDENTIALS="config/credential.json"
+
+
+5. Run the app
+python src/app.py
+
+
+Then open http://localhost:5000 in your browser.
+
+
 
 📸 Demo Screens
 - Customer lookup and balance view
