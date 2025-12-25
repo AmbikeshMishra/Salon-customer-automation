@@ -55,10 +55,17 @@ This project is a lightweight, real-world automation system designed for barber 
 
 
 - Service selection and billing preview
+  <img width="1012" height="1100" alt="image" src="https://github.com/user-attachments/assets/d458cbf5-d2d1-4036-9607-0b70c9cf68a0" />
+
 - Top-up flow
+  <img width="1477" height="1132" alt="image" src="https://github.com/user-attachments/assets/77ceaec7-4873-4de4-9940-2a89939f89c9" />
+
 - Transaction history panel
+- <img width="1496" height="637" alt="image" src="https://github.com/user-attachments/assets/3ae0d845-8e55-48b5-83df-7414e5521da4" />
+
 - QR scanner interface
-(Add screenshots or GIFs in assets/ and embed here)
+<img width="570" height="570" alt="image" src="https://github.com/user-attachments/assets/aecf75c8-3f86-48ce-a59b-b6aa19cafc66" />
+
 
 📊 Business Impact
 - ⏱️ Faster checkout and reduced billing errors
