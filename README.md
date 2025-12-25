@@ -84,20 +84,22 @@ Then open http://localhost:5000 in your browser.
 
 📸 Demo Screens
 - Customer lookup and balance view
-  <img width="961" height="760" alt="image" src="https://github.com/user-attachments/assets/d36fbd39-9e7d-4bb6-b77d-f554922bebc6" />
-
+  <img width="547" height="555" alt="image" src="https://github.com/user-attachments/assets/cfba3704-5976-4968-aa9d-62a80f1cd4bf" />
 
 - Service selection and billing preview
-  <img width="1012" height="1100" alt="image" src="https://github.com/user-attachments/assets/d458cbf5-d2d1-4036-9607-0b70c9cf68a0" />
+  <img width="1127" height="912" alt="image" src="https://github.com/user-attachments/assets/9a2ded3f-11f6-43bf-b013-2dd9f4b8f049" />
+
 
 - Top-up flow
-  <img width="1477" height="1132" alt="image" src="https://github.com/user-attachments/assets/77ceaec7-4873-4de4-9940-2a89939f89c9" />
+ <img width="1118" height="1025" alt="image" src="https://github.com/user-attachments/assets/4e836f9e-d0d6-4329-8ef6-7b528f993a6e" />
+
 
 - Transaction history panel
-- <img width="1496" height="637" alt="image" src="https://github.com/user-attachments/assets/3ae0d845-8e55-48b5-83df-7414e5521da4" />
+<img width="1136" height="552" alt="image" src="https://github.com/user-attachments/assets/1f953c9b-85f7-478a-8b05-490fc6aee1af" />
+
 
 - QR scanner interface
-<img width="570" height="570" alt="image" src="https://github.com/user-attachments/assets/aecf75c8-3f86-48ce-a59b-b6aa19cafc66" />
+<img width="585" height="493" alt="image" src="https://github.com/user-attachments/assets/cff477b3-8ea9-4175-9b57-f7ecec970ad9" />
 
 
 📊 Business Impact
