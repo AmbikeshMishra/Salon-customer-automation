@@ -51,6 +51,9 @@ This project is a lightweight, real-world automation system designed for barber 
 
 📸 Demo Screens
 - Customer lookup and balance view
+  <img width="961" height="760" alt="image" src="https://github.com/user-attachments/assets/d36fbd39-9e7d-4bb6-b77d-f554922bebc6" />
+
+
 - Service selection and billing preview
 - Top-up flow
 - Transaction history panel
@@ -63,14 +66,3 @@ This project is a lightweight, real-world automation system designed for barber 
 - 🔁 Improved customer retention via prepaid packages
 - 👥 Staff-friendly interface with minimal training required
 
-🔮 Future Enhancements
-- Inventory tracking for consumables
-- Multi-branch support
-- Role-based access control
-- Thermal printer integration for receipts
-- Loyalty points and referral system
-
-👨‍💻 About Me
-I’m Ambikesh Mishra, a freelance IT professional specializing in Python, agentic AI, and workflow automation. This app is part of my portfolio showcasing hyperlocal automation solutions for small businesses.
-
-Let me know if you'd like help writing a matching LinkedIn post or Upwork pitch to showcase this project professionally.
