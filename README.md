@@ -58,6 +58,9 @@ cd barber_app
 - Windows (cmd):
 python -m venv venv
 venv\Scripts\activate
+- Windows (PowerShell):
+python -m venv venv
+venv\Scripts\Activate.ps1
 - Linux/macOS:
 python3 -m venv venv
 source venv/bin/activate
@@ -73,10 +76,8 @@ pip install -r requirements.txt
 export GOOGLE_APPLICATION_CREDENTIALS="config/credential.json"
 
 
-5. Run the app
-python src/app.py
-
-
+- (On Windows PowerShell, use setx GOOGLE_APPLICATION_CREDENTIALS "config\credential.json")
+If you’re only using SQLite, no credentials are required.5. Run the apppython src/app.py
 Then open http://localhost:5000 in your browser.
 
 
