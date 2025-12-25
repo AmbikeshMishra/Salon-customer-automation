@@ -1,4 +1,5 @@
 ✂️ Barber Shop Automation App
+
 📌 Overview
 This project is a lightweight, real-world automation system designed for barber shops and salons. It streamlines customer management, service selection, billing, and transaction logging — all through a clean, fast, and staff-friendly interface. Built for hyperlocal businesses that want digital efficiency without complex software.
 
