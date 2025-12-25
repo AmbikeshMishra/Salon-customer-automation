@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receipt</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        h2 { margin-bottom: 10px; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 5px; }
+        .summary { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Receipt</h2>
+    <p><strong>Customer:</strong> {{ customer.Name }} ({{ customer.Phone }})</p>
+    <p><strong>Scheme:</strong> {{ customer.SchemeName }}</p>
+
+    <ul>
+        {% for row in rows %}
+            <li>{{ row[6] }} ₹{{ row[7] }} → Final ₹{{ row[9] }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="summary">
+        <p><strong>Total:</strong> ₹{{ total }}</p>
+        <p><strong>Discount:</strong> ₹{{ discount }}</p>
+        <p><strong>Final Price:</strong> ₹{{ final }}</p>
+        <p><strong>Remaining Balance:</strong> ₹{{ balance }}</p>
+    </div>
+
+    <button onclick="window.print()">🖨️ Print Receipt</button>
+    <br><br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

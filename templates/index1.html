@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Barber Ledger</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/static/html5-qrcode.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 10px; }
+    button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+    #receipt { white-space: pre-wrap; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Scan QR</h2>
+  <div id="qr-reader" style="width:300px;"></div>
+  <button onclick="startQR()">Start Scanner</button>
+
+  <h3>Services</h3>
+  {% for code, (name, price) in services.items() %}
+    <button onclick="submit('service','{{code}}')">{{name}} ₹{{price}}</button>
+  {% endfor %}
+
+  <h3>Top-Up</h3>
+  <button onclick="topup()">Top-Up</button>
+
+  <h3>Fix Mistakes</h3>
+  <button onclick="deleteService()">Delete</button>
+  <button onclick="correctService()">Correct</button>
+
+  <div id="receipt">Receipt will appear here</div>
+
+  <script>
+    let customer = null;
+
+    function startQR() {
+    const qr = new Html5Qrcode("qr-reader");
+    qr.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        console.log("Decoded:", decodedText);
+        try {
+          customer = JSON.parse(decodedText);
+          alert("Customer loaded: " + customer.Name);
+          qr.stop();
+        } catch (e) {
+          alert("Invalid QR format. Please use a valid customer QR.");
+          console.error("QR decode error:", e);
+        }
+      },
+      (errorMessage) => {
+        // Optional: log scan errors
+        console.warn("Scan error:", errorMessage);
+      }
+    ).catch((err) => {
+      alert("Camera start failed: " + err);
+      console.error("Camera error:", err);
+    });
+}
+
+    function submit(action, code=null, correct_code=null, amount=0, mode="add") {
+      if (!customer) return alert("Scan QR first");
+      fetch("/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customer, action, code, correct_code, amount, mode })
+      })
+      .then(res => res.json())
+      .then(data => {
+        let txt = "===== Receipt =====\n";
+        txt += `Customer: ${customer.Name}\nBalance: ₹${data.balance}\n`;
+        data.rows.forEach(r => {
+          txt += `${r[6]} (Code ${r[5]}): ₹${r[9]}\n`;
+        });
+        document.getElementById("receipt").innerText = txt;
+      });
+    }
+
+    function topup() {
+      let amt = prompt("Enter top-up amount:");
+      let mode = confirm("Add to existing balance?") ? "add" : "reset";
+      submit("topup", null, null, amt, mode);
+    }
+
+    function deleteService() {
+      let code = prompt("Enter wrong service code to delete:");
+      submit("delete", code);
+    }
+
+    function correctService() {
+      let wrong = prompt("Enter wrong service code:");
+      let correct = prompt("Enter correct service code:");
+      submit("correct", wrong, correct);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barber Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            display: inline-block;
+        }
+        .section { margin-bottom: 30px; }
+        #qr-reader { width: 300px; margin-top: 10px; }
+        select, input { padding: 6px; margin: 5px; }
+        .row { display: flex; gap: 40px; align-items: flex-start; }
+        .customer-box {
+            background: #f0f8ff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+    </style>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+    <h1>Barber Shop</h1>
+
+    <!-- ✅ Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="section">
+                {% for msg in messages %}
+                    <p style="color: green;">{{ msg }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% if session.finalized_summary %}
+    <div class="section" style="background:#f9f9f9; padding:15px; border:1px solid #ccc;">
+        <h2>🧾 Finalization Summary</h2>
+        <p><strong>Customer:</strong> {{ session.finalized_summary.customer.Name }} ({{ session.finalized_summary.customer.Phone }})</p>
+        <ul>
+            {% for row in session.finalized_summary.rows %}
+                <li>
+                    {{ row.name }} | Original ₹{{ row.original }} → Final ₹{{ row.final }}
+                    {% if row.discount > 0 %} | Discount ₹{{ row.discount }}{% endif %}
+                    | Balance ₹{{ row.balance }}
+                </li>
+            {% endfor %}
+        </ul>
+        <p><strong>Total:</strong> ₹{{ session.finalized_summary.total }}</p>
+        <p><strong>Discount:</strong> ₹{{ session.finalized_summary.discount }}</p>
+        <p><strong>Final Price:</strong> ₹{{ session.finalized_summary.final }}</p>
+        <p><strong>Remaining Balance:</strong> ₹{{ session.finalized_summary.balance }}</p>
+    </div>
+    {% endif %}
+
+    <!-- 👤 Current Customer -->
+    <div class="customer-box">
+        <h2>Current Customer</h2>
+        <p id="customer-info">No customer scanned yet.</p>
+        <button onclick="resetCustomer()">Reset Customer</button>
+    </div>
+
+    <!-- 🔍 QR Scanner + 📱 Mobile Lookup side by side -->
+    <div class="section row">
+        <!-- QR Scanner -->
+        <div style="flex: 1;">
+            <h2>Scan QR</h2>
+            <button onclick="startQR()">Start Scanner</button>
+            <div id="qr-reader"></div>
+        </div>
+
+        <!-- Mobile Lookup -->
+        <div style="flex: 1;">
+            <h2>Lookup by Mobile Number</h2>
+            <form action="/lookup_customer" method="post">
+                <input type="text" name="phone" placeholder="Enter mobile number" required>
+                <button type="submit">Find Customer</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>New Customer?</h2>
+            <a href="{{ url_for('show_registration') }}">
+                <button>Register New Customer</button>
+            </a>
+        </div>
+
+    </div>
+
+   
+    <!-- 💈 Services -->
+    <div class="section">
+        <h2>Services</h2>
+        {% for code, (name, price) in services.items() %}
+            <a href="{{ url_for('add_service', code=code) }}">
+                <button>{{ name }} ₹{{ price }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- 🧾 Selected Services -->
+    <div class="section">
+        <h2>Selected Services</h2>
+        {% if selected %}
+            <ul>
+            {% for code in selected %}
+                <li>{{ services[code][0] }} ₹{{ services[code][1] }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No services selected yet.</p>
+        {% endif %}
+        <a href="{{ url_for('undo_last') }}"><button>Undo Last</button></a>
+        <form action="{{ url_for('finalize') }}" method="post">
+            <button type="submit">Finalize & Log</button>
+        </form>
+    </div>
+
+    <!-- 💳 Top-Up -->
+    <div class="section">
+        <h2>Top-Up</h2>
+        <form action="/submit" method="post">
+            <input type="hidden" name="action" value="topup">
+            <input type="text" name="amount" placeholder="Enter amount">
+            <select name="mode">
+                <option value="add">Add to Balance</option>
+                <option value="reset">Reset Balance</option>
+            </select>
+            <button type="submit">Top-Up</button>
+        </form>
+    </div>
+
+    <!-- 🛠 Fix Mistakes -->
+    <div class="section">
+        <h2>Fix Mistakes</h2>
+
+        <!-- Delete Service -->
+        <form action="/submit" method="post">
+            <input type="hidden" name="action" value="delete">
+            <select name="code">
+                {% for code, (name, price) in services.items() %}
+                    <option value="{{ code }}">{{ name }} ₹{{ price }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Delete</button>
+        </form>
+
+        <!-- Correct Service -->
+        <form action="/submit" method="post">
+            <input type="hidden" name="action" value="correct">
+            <label>Wrong Service:</label>
+            <select name="code">
+                {% for code, (name, price) in services.items() %}
+                    <option value="{{ code }}">{{ name }} ₹{{ price }}</option>
+                {% endfor %}
+            </select>
+            <label>Correct Service:</label>
+            <select name="correct_code">
+                {% for code, (name, price) in services.items() %}
+                    <option value="{{ code }}">{{ name }} ₹{{ price }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Correct</button>
+        </form>
+    </div>
+
+    <!-- 📷 QR Scanner Script -->
+    <script>
+        function startQR() {
+            const qr = new Html5Qrcode("qr-reader");
+            qr.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    try {
+                        const customer = JSON.parse(decodedText.trim());
+                        alert("✅ Customer loaded: " + customer.Name);
+
+                        fetch("/set_customer", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ customer })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById("customer-info").innerText =
+                                "Customer: " + customer.Name + " (" + customer.Phone + ")";
+                        });
+
+                        qr.stop();
+                    } catch (e) {
+                        alert("❌ Invalid QR format");
+                    }
+                }
+            ).catch(err => {
+                alert("❌ Camera start failed: " + err);
+            });
+        }
+
+        function resetCustomer() {
+            fetch("/reset_customer", { method: "POST" })
+                .then(res => res.json())
+                .then(() => {
+                    document.getElementById("customer-info").innerText = "No customer scanned yet.";
+                });
+        }
+
+        fetch("/get_customer")
+            .then(res => res.json())
+            .then(data => {
+                if (data.customer) {
+                    document.getElementById("customer-info").innerText =
+                        "Customer: " + data.customer.Name + " (" + data.customer.Phone + ")";
+                }
+            });
+
+        function lookupByPhone(event) {
+            event.preventDefault();
+            const form = event.target;
+            const phone = form.phone.value;
+
+            fetch("/lookup_customer", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "phone=" + encodeURIComponent(phone)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    const c = data.customer;
+                    alert("✅ Customer loaded: " + c.Name);
+                    document.getElementById("customer-info").innerText =
+                        "Customer: " + c.Name + " (" + c.Phone + ")";
+                } else {
+                    alert("❌ " + data.message);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
