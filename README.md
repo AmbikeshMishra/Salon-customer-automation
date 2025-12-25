@@ -34,7 +34,7 @@ This project is a lightweight, real-world automation system designed for barber 
 - Integrations: QR scanner (browser-based), WhatsApp/SMS (optional)
 
 📂 Project Structure
-barber_app/
+```barber_app/
 │── src/
 │   ├── app.py                 # Main app logic
 │   ├── customer.py            # Customer lookup and registration
@@ -46,7 +46,7 @@ barber_app/
 │── config/                    # Credentials (ignored in .gitignore)
 │── assets/                    # Screenshots and demo GIFs
 │── README.md
-
+```
 
 
 📸 Demo Screens
